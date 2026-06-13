@@ -1,0 +1,92 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
+import { DOMAINES } from '@/lib/types';
+import { ArrowLeft, Save } from 'lucide-react';
+import Link from 'next/link';
+
+export default function NewServicePage() {
+  const router = useRouter();
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    nom: '',
+    domaine: 'nettoyage',
+    description: '',
+    prix_defaut: '',
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.nom.trim()) return;
+    setSaving(true);
+
+    const { error } = await supabase.from('services').insert([{
+      nom: form.nom,
+      domaine: form.domaine,
+      description: form.description || null,
+      prix_defaut: form.prix_defaut ? parseFloat(form.prix_defaut) : null,
+    }]);
+
+    if (!error) router.push('/dashboard/services');
+    setSaving(false);
+  };
+
+  return (
+    <div className="p-6 max-w-xl mx-auto">
+      <div className="flex items-center gap-4 mb-6">
+        <Link href="/dashboard/services" className="p-2 hover:bg-slate-100 rounded-lg transition">
+          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        </Link>
+        <h1 className="text-2xl font-bold text-slate-900">Nouveau service</h1>
+      </div>
+
+      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Nom *</label>
+          <input type="text" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })}
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Domaine</label>
+          <div className="flex gap-3">
+            {DOMAINES.map(d => (
+              <button key={d} type="button" onClick={() => setForm({ ...form, domaine: d })}
+                className={`flex-1 px-4 py-3 rounded-lg border-2 text-sm font-medium transition ${
+                  form.domaine === d
+                    ? d === 'nettoyage'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-amber-500 bg-amber-50 text-amber-700'
+                    : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                }`}>
+                {d === 'nettoyage' ? '🧹 Nettoyage' : '🐭 3D (Dératisation/Désinfection/Désinsectisation)'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+          <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={3} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Prix par défaut (MAD)</label>
+          <input type="number" step="0.01" value={form.prix_defaut} onChange={(e) => setForm({ ...form, prix_defaut: e.target.value })}
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+        </div>
+
+        <div className="flex justify-end pt-2">
+          <button type="submit" disabled={saving}
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition disabled:opacity-50">
+            <Save className="w-4 h-4" />
+            {saving ? 'Enregistrement...' : 'Enregistrer'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

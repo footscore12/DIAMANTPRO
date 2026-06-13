@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Client, Intervention, Document as Doc } from '@/lib/types';
+import { Client, Intervention, Document as Doc, Service } from '@/lib/types';
 import { formatCurrency, generateDocumentNumber, getStatusColor, getStatusLabel } from '@/lib/utils';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import InvoicePDF from '@/components/documents/InvoicePDF';
@@ -16,6 +16,7 @@ export default function DocumentsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [documents, setDocuments] = useState<Doc[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [docType, setDocType] = useState<'devis' | 'facture' | 'bon_livraison'>('facture');
@@ -29,14 +30,16 @@ export default function DocumentsPage() {
   }, []);
 
   async function loadData() {
-    const [cl, ints, docs] = await Promise.all([
+    const [cl, ints, docs, svs] = await Promise.all([
       supabase.from('clients').select('*').order('nom'),
       supabase.from('interventions').select('*').order('date_intervention', { ascending: false }),
       supabase.from('documents').select('*, client:clients(*)').order('created_at', { ascending: false }),
+      supabase.from('services').select('*').order('domaine').order('nom'),
     ]);
     if (cl.data) setClients(cl.data);
     if (ints.data) setInterventions(ints.data);
     if (docs.data) setDocuments(docs.data as any);
+    if (svs.data) setServices(svs.data);
     setLoading(false);
   }
 
@@ -262,8 +265,26 @@ export default function DocumentsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Prestation</label>
-                    <input type="text" value={prestation} onChange={(e) => setPrestation(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+                    <div className="flex gap-2">
+                      <input type="text" value={prestation} onChange={(e) => setPrestation(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Ou taper directement" />
+                      <select onChange={(e) => {
+                        const svc = services.find(s => s.id === e.target.value);
+                        if (svc) {
+                          setPrestation(svc.nom);
+                          if (!montant && svc.prix_defaut && svc.prix_defaut > 0) setMontant(svc.prix_defaut.toString());
+                        }
+                      }}
+                        className="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                        <option value="">Services</option>
+                        {services.filter(s => s.domaine === 'nettoyage').map(s => (
+                          <option key={s.id} value={s.id}>🧹 {s.nom}</option>
+                        ))}
+                        {services.filter(s => s.domaine === '3d').map(s => (
+                          <option key={s.id} value={s.id}>🐭 {s.nom}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div>

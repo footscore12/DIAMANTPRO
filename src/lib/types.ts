@@ -45,21 +45,22 @@ export interface Document {
   client?: Client;
 }
 
+export interface Service {
+  id: string;
+  nom: string;
+  domaine: 'nettoyage' | '3d';
+  description: string | null;
+  prix_defaut: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export type NewClient = Omit<Client, 'id' | 'created_at' | 'updated_at'>;
 export type NewIntervention = Omit<Intervention, 'id' | 'created_at' | 'updated_at'>;
 export type NewDocument = Omit<Document, 'id' | 'created_at' | 'updated_at'>;
+export type NewService = Omit<Service, 'id' | 'created_at' | 'updated_at'>;
 
-export const PRESTATIONS = [
-  'Nettoyage complet',
-  'Nettoyage tapis',
-  'Nettoyage vitres',
-  'Dératisation',
-  'Désinfection',
-  'Désinsectisation',
-  'Nettoyage après chantier',
-  'Nettoyage bureaux',
-  'Autre',
-] as const;
+export const DOMAINES = ['nettoyage', '3d'] as const;
 
 export const STATUT_INTERVENTION = [
   'planifiee',

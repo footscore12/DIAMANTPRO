@@ -1,24 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { PRESTATIONS } from '@/lib/types';
+import { Service } from '@/lib/types';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
 
 export default function NewInterventionPage() {
   const { id } = useParams();
   const router = useRouter();
+  const [services, setServices] = useState<Service[]>([]);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<Record<string, string>>({
     date_intervention: new Date().toISOString().split('T')[0],
     heure_debut: '',
     heure_fin: '',
-    type_prestation: PRESTATIONS[0],
+    type_prestation: '',
     montant: '',
     notes: '',
   });
+
+  useEffect(() => {
+    supabase.from('services').select('*').order('domaine').order('nom').then(({ data }) => {
+      if (data) setServices(data);
+    });
+  }, []);
+
+  function handleServiceSelect(serviceId: string) {
+    const service = services.find(s => s.id === serviceId);
+    if (service) {
+      setForm({
+        ...form,
+        type_prestation: service.nom,
+        montant: service.prix_defaut && service.prix_defaut > 0 ? service.prix_defaut.toString() : '',
+      });
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +57,9 @@ export default function NewInterventionPage() {
     setSaving(false);
   };
 
+  const nettoyageServices = services.filter(s => s.domaine === 'nettoyage');
+  const threeDServices = services.filter(s => s.domaine === '3d');
+
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="flex items-center gap-4 mb-6">
@@ -57,12 +78,38 @@ export default function NewInterventionPage() {
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Type de prestation *</label>
-            <select value={form.type_prestation}
-              onChange={(e) => setForm({ ...form, type_prestation: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
-              {PRESTATIONS.map((p) => <option key={p} value={p}>{p}</option>)}
+            <label className="block text-sm font-medium text-slate-700 mb-1">Service</label>
+            <select onChange={(e) => handleServiceSelect(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+              <option value="">Choisir un service...</option>
+              {nettoyageServices.length > 0 && (
+                <optgroup label="🧹 Nettoyage">
+                  {nettoyageServices.map(s => (
+                    <option key={s.id} value={s.id}>{s.nom} {s.prix_defaut && s.prix_defaut > 0 ? `(${s.prix_defaut} MAD)` : ''}</option>
+                  ))}
+                </optgroup>
+              )}
+              {threeDServices.length > 0 && (
+                <optgroup label="🐭 3D (Dératisation / Désinfection / Désinsectisation)">
+                  {threeDServices.map(s => (
+                    <option key={s.id} value={s.id}>{s.nom} {s.prix_defaut && s.prix_defaut > 0 ? `(${s.prix_defaut} MAD)` : ''}</option>
+                  ))}
+                </optgroup>
+              )}
             </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Type de prestation *</label>
+            <input type="text" value={form.type_prestation}
+              onChange={(e) => setForm({ ...form, type_prestation: e.target.value })}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required
+              placeholder="Ou tapez directement" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Montant (MAD)</label>
+            <input type="number" step="0.01" value={form.montant}
+              onChange={(e) => setForm({ ...form, montant: e.target.value })}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Heure début</label>
@@ -74,12 +121,6 @@ export default function NewInterventionPage() {
             <label className="block text-sm font-medium text-slate-700 mb-1">Heure fin</label>
             <input type="time" value={form.heure_fin}
               onChange={(e) => setForm({ ...form, heure_fin: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Montant (MAD)</label>
-            <input type="number" step="0.01" value={form.montant}
-              onChange={(e) => setForm({ ...form, montant: e.target.value })}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div className="md:col-span-2">

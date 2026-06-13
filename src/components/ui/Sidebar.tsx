@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import {
-  LayoutDashboard, Users, Calendar, FileText, LogOut, Building2
+  LayoutDashboard, Users, Calendar, FileText, LogOut, Building2, Sparkles
 } from 'lucide-react';
 
 const navItems = [
   { href: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
   { href: '/dashboard/clients', label: 'Clients', icon: Users },
+  { href: '/dashboard/services', label: 'Services', icon: Sparkles },
   { href: '/dashboard/planner', label: 'Planning', icon: Calendar },
   { href: '/dashboard/documents', label: 'Documents', icon: FileText },
 ];
