@@ -264,27 +264,37 @@ export default function DocumentsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Prestation</label>
-                    <div className="flex gap-2">
-                      <input type="text" value={prestation} onChange={(e) => setPrestation(e.target.value)}
-                        className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Ou taper directement" />
-                      <select onChange={(e) => {
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Prestation *</label>
+                    <select value={services.find(s => s.nom === prestation)?.id || ''}
+                      onChange={(e) => {
+                        if (e.target.value === '__custom__') return;
                         const svc = services.find(s => s.id === e.target.value);
                         if (svc) {
                           setPrestation(svc.nom);
                           if (!montant && svc.prix_defaut && svc.prix_defaut > 0) setMontant(svc.prix_defaut.toString());
                         }
                       }}
-                        className="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                        <option value="">Services</option>
-                        {services.filter(s => s.domaine === 'nettoyage').map(s => (
-                          <option key={s.id} value={s.id}>🧹 {s.nom}</option>
-                        ))}
-                        {services.filter(s => s.domaine === '3d').map(s => (
-                          <option key={s.id} value={s.id}>🐭 {s.nom}</option>
-                        ))}
-                      </select>
-                    </div>
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                      <option value="">-- Choisir un service --</option>
+                      <option value="__custom__">✏️ Prestation personnalisée...</option>
+                      {services.filter(s => s.domaine === 'nettoyage').length > 0 && (
+                        <optgroup label="🧹 Nettoyage">
+                          {services.filter(s => s.domaine === 'nettoyage').map(s => (
+                            <option key={s.id} value={s.id}>{s.nom}{s.prix_defaut && s.prix_defaut > 0 ? ` (${s.prix_defaut} MAD)` : ''}</option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {services.filter(s => s.domaine === '3d').length > 0 && (
+                        <optgroup label="🐭 3D (Dératisation / Désinfection / Désinsectisation)">
+                          {services.filter(s => s.domaine === '3d').map(s => (
+                            <option key={s.id} value={s.id}>{s.nom}{s.prix_defaut && s.prix_defaut > 0 ? ` (${s.prix_defaut} MAD)` : ''}</option>
+                          ))}
+                        </optgroup>
+                      )}
+                    </select>
+                    <input type="text" value={prestation} onChange={(e) => setPrestation(e.target.value)}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none mt-2"
+                      placeholder="Ou tapez directement la prestation" />
                   </div>
 
                   <div>

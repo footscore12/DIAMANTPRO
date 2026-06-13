@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Service } from '@/lib/types';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Sparkles, Bug } from 'lucide-react';
 import Link from 'next/link';
 
 export default function NewInterventionPage() {
@@ -12,6 +12,7 @@ export default function NewInterventionPage() {
   const router = useRouter();
   const [services, setServices] = useState<Service[]>([]);
   const [saving, setSaving] = useState(false);
+  const [customMode, setCustomMode] = useState(false);
   const [form, setForm] = useState<Record<string, string>>({
     date_intervention: new Date().toISOString().split('T')[0],
     heure_debut: '',
@@ -20,6 +21,7 @@ export default function NewInterventionPage() {
     montant: '',
     notes: '',
   });
+  const [selectedServiceId, setSelectedServiceId] = useState('');
 
   useEffect(() => {
     supabase.from('services').select('*').order('domaine').order('nom').then(({ data }) => {
@@ -28,14 +30,22 @@ export default function NewInterventionPage() {
   }, []);
 
   function handleServiceSelect(serviceId: string) {
+    setSelectedServiceId(serviceId);
+    setCustomMode(false);
     const service = services.find(s => s.id === serviceId);
     if (service) {
-      setForm({
-        ...form,
+      setForm(prev => ({
+        ...prev,
         type_prestation: service.nom,
         montant: service.prix_defaut && service.prix_defaut > 0 ? service.prix_defaut.toString() : '',
-      });
+      }));
     }
+  }
+
+  function enableCustomMode() {
+    setCustomMode(true);
+    setSelectedServiceId('');
+    setForm(prev => ({ ...prev, type_prestation: '', montant: '' }));
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,33 +87,51 @@ export default function NewInterventionPage() {
               onChange={(e) => setForm({ ...form, date_intervention: e.target.value })}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Service</label>
-            <select onChange={(e) => handleServiceSelect(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-              <option value="">Choisir un service...</option>
-              {nettoyageServices.length > 0 && (
-                <optgroup label="🧹 Nettoyage">
-                  {nettoyageServices.map(s => (
-                    <option key={s.id} value={s.id}>{s.nom} {s.prix_defaut && s.prix_defaut > 0 ? `(${s.prix_defaut} MAD)` : ''}</option>
-                  ))}
-                </optgroup>
-              )}
-              {threeDServices.length > 0 && (
-                <optgroup label="🐭 3D (Dératisation / Désinfection / Désinsectisation)">
-                  {threeDServices.map(s => (
-                    <option key={s.id} value={s.id}>{s.nom} {s.prix_defaut && s.prix_defaut > 0 ? `(${s.prix_defaut} MAD)` : ''}</option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
-          </div>
-          <div>
+          <div className="md:col-span-2">
             <label className="block text-sm font-medium text-slate-700 mb-1">Type de prestation *</label>
-            <input type="text" value={form.type_prestation}
-              onChange={(e) => setForm({ ...form, type_prestation: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required
-              placeholder="Ou tapez directement" />
+            {!customMode ? (
+              <div className="space-y-2">
+                <select value={selectedServiceId} onChange={(e) => handleServiceSelect(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                  <option value="">-- Choisir un service --</option>
+                  {nettoyageServices.length > 0 && (
+                    <optgroup label="🧹 Nettoyage">
+                      {nettoyageServices.map(s => (
+                        <option key={s.id} value={s.id}>{s.nom}{s.prix_defaut && s.prix_defaut > 0 ? `  (${s.prix_defaut} MAD)` : ''}</option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {threeDServices.length > 0 && (
+                    <optgroup label="🐭 3D (Dératisation / Désinfection / Désinsectisation)">
+                      {threeDServices.map(s => (
+                        <option key={s.id} value={s.id}>{s.nom}{s.prix_defaut && s.prix_defaut > 0 ? `  (${s.prix_defaut} MAD)` : ''}</option>
+                      ))}
+                    </optgroup>
+                  )}
+                </select>
+                <button type="button" onClick={enableCustomMode}
+                  className="text-xs text-emerald-600 hover:text-emerald-700">
+                  + Prestation personnalisée (hors liste)
+                </button>
+                {selectedServiceId && services.find(s => s.id === selectedServiceId) && (
+                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                    {services.find(s => s.id === selectedServiceId)?.domaine === 'nettoyage' ? <Sparkles className="w-3 h-3" /> : <Bug className="w-3 h-3" />}
+                    {services.find(s => s.id === selectedServiceId)?.description}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <input type="text" value={form.type_prestation}
+                  onChange={(e) => setForm({ ...form, type_prestation: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required
+                  placeholder="Tapez la prestation..." />
+                <button type="button" onClick={() => { setCustomMode(false); setSelectedServiceId(''); }}
+                  className="text-xs text-slate-500 hover:text-slate-700">
+                  ← Retour à la liste des services
+                </button>
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Montant (MAD)</label>
