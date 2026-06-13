@@ -1,16 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Client, Intervention, Document as Doc, Service } from '@/lib/types';
+import { Client, Intervention, Document as Doc, Service, LigneDocument } from '@/lib/types';
 import { formatCurrency, generateDocumentNumber, getStatusColor, getStatusLabel } from '@/lib/utils';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import InvoicePDF from '@/components/documents/InvoicePDF';
 import QuotePDF from '@/components/documents/QuotePDF';
 import DeliveryNotePDF from '@/components/documents/DeliveryNotePDF';
 import {
-  FileText, Plus, CreditCard, Truck, Download, X
+  FileText, Plus, CreditCard, Truck, Download, X, Trash2
 } from 'lucide-react';
+
+const ligneVide = (): LigneDocument => ({ designation: '', quantite: 1, prix_unitaire: 0, montant: 0 });
 
 export default function DocumentsPage() {
   const [clients, setClients] = useState<Client[]>([]);
@@ -22,8 +24,7 @@ export default function DocumentsPage() {
   const [docType, setDocType] = useState<'devis' | 'facture' | 'bon_livraison'>('facture');
   const [selectedClient, setSelectedClient] = useState('');
   const [selectedIntervention, setSelectedIntervention] = useState('');
-  const [montant, setMontant] = useState('');
-  const [prestation, setPrestation] = useState('');
+  const [lignes, setLignes] = useState<LigneDocument[]>([ligneVide()]);
 
   useEffect(() => {
     loadData();
@@ -43,8 +44,36 @@ export default function DocumentsPage() {
     setLoading(false);
   }
 
+  const totalHT = lignes.reduce((s, l) => s + l.montant, 0);
+  const totalTTC = totalHT * 1.2;
+
+  function ajouterLigne() {
+    setLignes(prev => [...prev, ligneVide()]);
+  }
+
+  function supprimerLigne(idx: number) {
+    setLignes(prev => prev.filter((_, i) => i !== idx));
+  }
+
+  function majLigne(idx: number, champ: keyof LigneDocument, valeur: string) {
+    setLignes(prev => {
+      const next = [...prev];
+      const ligne = { ...next[idx] };
+      if (champ === 'designation') {
+        ligne.designation = valeur;
+      } else if (champ === 'quantite') {
+        ligne.quantite = parseFloat(valeur) || 0;
+      } else if (champ === 'prix_unitaire') {
+        ligne.prix_unitaire = parseFloat(valeur) || 0;
+      }
+      ligne.montant = ligne.quantite * ligne.prix_unitaire;
+      next[idx] = ligne;
+      return next;
+    });
+  }
+
   async function saveDocument() {
-    if (!selectedClient || !montant) return;
+    if (!selectedClient || lignes.length === 0 || !lignes[0].designation) return;
 
     const numero = generateDocumentNumber(docType);
 
@@ -54,8 +83,9 @@ export default function DocumentsPage() {
       type: docType,
       numero,
       date_emission: new Date().toISOString().split('T')[0],
-      montant_ht: parseFloat(montant),
-      montant_ttc: parseFloat(montant) * 1.2,
+      montant_ht: totalHT,
+      montant_ttc: totalTTC,
+      contenu: { lignes },
       statut: 'brouillon',
     }]);
 
@@ -69,8 +99,7 @@ export default function DocumentsPage() {
   function resetForm() {
     setSelectedClient('');
     setSelectedIntervention('');
-    setMontant('');
-    setPrestation('');
+    setLignes([ligneVide()]);
   }
 
   function openModal(type: 'devis' | 'facture' | 'bon_livraison') {
@@ -84,8 +113,12 @@ export default function DocumentsPage() {
     if (clientInts.length > 0) {
       const last = clientInts[0];
       setSelectedIntervention(last.id);
-      setMontant(last.montant?.toString() || '');
-      setPrestation(last.type_prestation);
+      setLignes([{
+        designation: last.type_prestation,
+        quantite: 1,
+        prix_unitaire: last.montant || 0,
+        montant: last.montant || 0,
+      }]);
     }
   }
 
@@ -144,7 +177,7 @@ export default function DocumentsPage() {
                   const icons: Record<string, any> = { devis: FileText, facture: CreditCard, bon_livraison: Truck };
                   const Icon = icons[doc.type] || FileText;
 
-                  const docForPdf = { client: clientDoc!, intervention: interventions.find(i => i.id === doc.intervention_id) || interventions[0] };
+                  const docLignes = (doc.contenu?.lignes) || [{ designation: 'Prestation', quantite: 1, prix_unitaire: doc.montant_ht || 0, montant: doc.montant_ht || 0 }];
 
                   return (
                     <tr key={doc.id} className="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-800/50">
@@ -170,22 +203,21 @@ export default function DocumentsPage() {
                               doc.type === 'facture' ? (
                                 <InvoicePDF
                                   client={clientDoc}
-                                  intervention={docForPdf.intervention}
+                                  lignes={docLignes}
                                   numero={doc.numero}
                                   date={new Date(doc.date_emission).toLocaleDateString('fr-FR')}
                                 />
                               ) : doc.type === 'devis' ? (
                                 <QuotePDF
                                   client={clientDoc}
-                                  prestation={docForPdf.intervention?.type_prestation || 'Prestation'}
-                                  montant={doc.montant_ht || 0}
+                                  lignes={docLignes}
                                   numero={doc.numero}
                                   date={new Date(doc.date_emission).toLocaleDateString('fr-FR')}
                                 />
                               ) : (
                                 <DeliveryNotePDF
                                   client={clientDoc}
-                                  intervention={docForPdf.intervention}
+                                  lignes={docLignes}
                                   numero={doc.numero}
                                   date={new Date(doc.date_emission).toLocaleDateString('fr-FR')}
                                 />
@@ -251,7 +283,7 @@ export default function DocumentsPage() {
                     <select value={selectedIntervention} onChange={(e) => {
                       setSelectedIntervention(e.target.value);
                       const int = interventions.find(i => i.id === e.target.value);
-                      if (int) { setMontant(int.montant?.toString() || ''); setPrestation(int.type_prestation); }
+                      if (int) { setLignes([{ designation: int.type_prestation, quantite: 1, prix_unitaire: int.montant || 0, montant: int.montant || 0 }]); }
                     }}
                       className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                       <option value="">Sans intervention</option>
@@ -264,43 +296,63 @@ export default function DocumentsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Prestation *</label>
-                    <select value={services.find(s => s.nom === prestation)?.id || ''}
-                      onChange={(e) => {
-                        if (e.target.value === '__custom__') return;
-                        const svc = services.find(s => s.id === e.target.value);
-                        if (svc) {
-                          setPrestation(svc.nom);
-                          if (!montant && svc.prix_defaut && svc.prix_defaut > 0) setMontant(svc.prix_defaut.toString());
-                        }
-                      }}
-                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
-                      <option value="">-- Choisir un service --</option>
-                      <option value="__custom__">✏️ Prestation personnalisée...</option>
-                      {services.filter(s => s.domaine === 'nettoyage').length > 0 && (
-                        <optgroup label="🧹 Nettoyage">
-                          {services.filter(s => s.domaine === 'nettoyage').map(s => (
-                            <option key={s.id} value={s.id}>{s.nom}{s.prix_defaut && s.prix_defaut > 0 ? ` (${s.prix_defaut} MAD)` : ''}</option>
-                          ))}
-                        </optgroup>
-                      )}
-                      {services.filter(s => s.domaine === '3d').length > 0 && (
-                        <optgroup label="🐭 3D (Dératisation / Désinfection / Désinsectisation)">
-                          {services.filter(s => s.domaine === '3d').map(s => (
-                            <option key={s.id} value={s.id}>{s.nom}{s.prix_defaut && s.prix_defaut > 0 ? ` (${s.prix_defaut} MAD)` : ''}</option>
-                          ))}
-                        </optgroup>
-                      )}
-                    </select>
-                    <input type="text" value={prestation} onChange={(e) => setPrestation(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none mt-2"
-                      placeholder="Ou tapez directement la prestation" />
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Lignes *</label>
+                      <button type="button" onClick={ajouterLigne}
+                        className="flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium">
+                        <Plus className="w-3.5 h-3.5" /> Ajouter une ligne
+                      </button>
+                    </div>
+                    <div className="space-y-2">
+                      {lignes.map((ligne, idx) => (
+                        <div key={idx} className="flex items-start gap-2 p-2 bg-slate-50 dark:bg-slate-700/30 rounded-lg">
+                          <div className="flex-1 min-w-0">
+                            <input type="text" value={ligne.designation}
+                              onChange={(e) => majLigne(idx, 'designation', e.target.value)}
+                              className="w-full px-2 py-1.5 text-sm border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded focus:ring-1 focus:ring-emerald-500 outline-none mb-1"
+                              placeholder="Désignation" />
+                            <div className="flex gap-2">
+                              <input type="number" value={ligne.quantite || ''}
+                                onChange={(e) => majLigne(idx, 'quantite', e.target.value)}
+                                className="w-20 px-2 py-1.5 text-sm border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded focus:ring-1 focus:ring-emerald-500 outline-none"
+                                placeholder="Qté" min="1" />
+                              <input type="number" value={ligne.prix_unitaire || ''}
+                                onChange={(e) => majLigne(idx, 'prix_unitaire', e.target.value)}
+                                className="flex-1 px-2 py-1.5 text-sm border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded focus:ring-1 focus:ring-emerald-500 outline-none"
+                                placeholder="Prix unitaire" step="0.01" />
+                              <div className="w-24 flex items-center justify-end text-sm font-medium text-slate-900 dark:text-white px-2">
+                                {ligne.montant.toFixed(2)}
+                              </div>
+                            </div>
+                          </div>
+                          {lignes.length > 1 && (
+                            <button type="button" onClick={() => supprimerLigne(idx)}
+                              className="p-1 text-slate-400 hover:text-red-500 mt-1 shrink-0">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Montant HT (MAD)</label>
-                    <input type="number" step="0.01" value={montant} onChange={(e) => setMontant(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+                  <div className="border-t border-slate-200 dark:border-slate-700 pt-3">
+                    <div className="flex justify-end text-sm space-y-1">
+                      <div className="w-48 space-y-1">
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                          <span>Total HT</span>
+                          <span className="font-medium text-slate-900 dark:text-white">{totalHT.toFixed(2)} MAD</span>
+                        </div>
+                        <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                          <span>TVA (20%)</span>
+                          <span className="font-medium text-slate-900 dark:text-white">{(totalHT * 0.20).toFixed(2)} MAD</span>
+                        </div>
+                        <div className="flex justify-between text-base font-bold text-emerald-600 dark:text-emerald-400 border-t border-slate-200 dark:border-slate-700 pt-1">
+                          <span>Total TTC</span>
+                          <span>{totalTTC.toFixed(2)} MAD</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </>
               )}
@@ -309,7 +361,7 @@ export default function DocumentsPage() {
                 <button onClick={() => setShowModal(false)}
                   className="px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition">Annuler</button>
                 <button onClick={saveDocument}
-                  disabled={!selectedClient || !montant}
+                  disabled={!selectedClient || lignes.length === 0 || !lignes[0].designation}
                   className="px-4 py-2 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition disabled:opacity-50">
                   Générer
                 </button>

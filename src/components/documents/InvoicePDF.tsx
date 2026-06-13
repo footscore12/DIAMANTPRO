@@ -1,7 +1,7 @@
 'use client';
 
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
-import { Client, Intervention } from '@/lib/types';
+import { Client, LigneDocument } from '@/lib/types';
 
 Font.register({
   family: 'Helvetica',
@@ -21,9 +21,10 @@ const styles = StyleSheet.create({
   table: { marginTop: 20, marginBottom: 20 },
   tableHeader: { flexDirection: 'row', backgroundColor: '#059669', color: '#fff', padding: 8 },
   tableRow: { flexDirection: 'row', borderBottom: '1 solid #e2e8f0', padding: 8 },
-  tableCol1: { width: '60%' },
-  tableCol2: { width: '20%', textAlign: 'right' },
+  tableCol1: { width: '40%' },
+  tableCol2: { width: '15%', textAlign: 'center' },
   tableCol3: { width: '20%', textAlign: 'right' },
+  tableCol4: { width: '25%', textAlign: 'right' },
   total: { flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10, fontSize: 12, fontWeight: 'bold' },
   footer: { position: 'absolute', bottom: 30, left: 40, right: 40, textAlign: 'center', color: '#a0aec0', fontSize: 8, borderTop: '1 solid #e2e8f0', paddingTop: 10 },
   infoBox: { backgroundColor: '#f7fafc', padding: 12, borderRadius: 4, marginBottom: 15 },
@@ -31,13 +32,13 @@ const styles = StyleSheet.create({
 
 interface InvoicePDFProps {
   client: Client;
-  intervention: Intervention;
+  lignes: LigneDocument[];
   numero: string;
   date: string;
 }
 
-export default function InvoicePDF({ client, intervention, numero, date }: InvoicePDFProps) {
-  const montantHT = intervention.montant || 0;
+export default function InvoicePDF({ client, lignes, numero, date }: InvoicePDFProps) {
+  const montantHT = lignes.reduce((s, l) => s + l.montant, 0);
   const tva = montantHT * 0.20;
   const montantTTC = montantHT + tva;
 
@@ -70,14 +71,18 @@ export default function InvoicePDF({ client, intervention, numero, date }: Invoi
         <View style={styles.table}>
           <View style={styles.tableHeader}>
             <Text style={styles.tableCol1}>Désignation</Text>
-            <Text style={styles.tableCol2}>Quantité</Text>
-            <Text style={styles.tableCol3}>Montant (MAD)</Text>
+            <Text style={styles.tableCol2}>Qté</Text>
+            <Text style={styles.tableCol3}>Prix unitaire</Text>
+            <Text style={styles.tableCol4}>Montant (MAD)</Text>
           </View>
-          <View style={styles.tableRow}>
-            <Text style={styles.tableCol1}>{intervention.type_prestation}</Text>
-            <Text style={styles.tableCol2}>1</Text>
-            <Text style={styles.tableCol3}>{montantHT.toFixed(2)}</Text>
-          </View>
+          {lignes.map((ligne, idx) => (
+            <View style={styles.tableRow} key={idx}>
+              <Text style={styles.tableCol1}>{ligne.designation}</Text>
+              <Text style={styles.tableCol2}>{ligne.quantite}</Text>
+              <Text style={styles.tableCol3}>{ligne.prix_unitaire.toFixed(2)}</Text>
+              <Text style={styles.tableCol4}>{ligne.montant.toFixed(2)}</Text>
+            </View>
+          ))}
         </View>
 
         <View style={{ marginTop: 10 }}>

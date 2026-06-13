@@ -1,7 +1,7 @@
 'use client';
 
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-import { Client, Intervention } from '@/lib/types';
+import { Client, LigneDocument } from '@/lib/types';
 
 const styles = StyleSheet.create({
   page: { padding: 40, fontSize: 10, fontFamily: 'Helvetica' },
@@ -15,9 +15,10 @@ const styles = StyleSheet.create({
   table: { marginTop: 20, marginBottom: 20, border: '1 solid #e2e8f0', borderRadius: 4 },
   tableHeader: { flexDirection: 'row', backgroundColor: '#059669', color: '#fff', padding: 8 },
   tableRow: { flexDirection: 'row', borderBottom: '1 solid #e2e8f0', padding: 8 },
-  tableCol1: { width: '60%' },
-  tableCol2: { width: '20%', textAlign: 'right' },
+  tableCol1: { width: '40%' },
+  tableCol2: { width: '15%', textAlign: 'center' },
   tableCol3: { width: '20%', textAlign: 'right' },
+  tableCol4: { width: '25%', textAlign: 'right' },
   footer: { position: 'absolute', bottom: 30, left: 40, right: 40, textAlign: 'center', color: '#a0aec0', fontSize: 8, borderTop: '1 solid #e2e8f0', paddingTop: 10 },
   signature: { marginTop: 40, flexDirection: 'row', justifyContent: 'space-between' },
   signatureBox: { width: '40%' },
@@ -26,12 +27,12 @@ const styles = StyleSheet.create({
 
 interface DeliveryNotePDFProps {
   client: Client;
-  intervention: Intervention;
+  lignes: LigneDocument[];
   numero: string;
   date: string;
 }
 
-export default function DeliveryNotePDF({ client, intervention, numero, date }: DeliveryNotePDFProps) {
+export default function DeliveryNotePDF({ client, lignes, numero, date }: DeliveryNotePDFProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -60,21 +61,22 @@ export default function DeliveryNotePDF({ client, intervention, numero, date }: 
         <View style={styles.table}>
           <View style={styles.tableHeader}>
             <Text style={styles.tableCol1}>Désignation</Text>
-            <Text style={styles.tableCol2}>Quantité</Text>
-            <Text style={styles.tableCol3}>Montant (MAD)</Text>
+            <Text style={styles.tableCol2}>Qté</Text>
+            <Text style={styles.tableCol3}>Prix unitaire</Text>
+            <Text style={styles.tableCol4}>Montant (MAD)</Text>
           </View>
-          <View style={styles.tableRow}>
-            <Text style={styles.tableCol1}>{intervention.type_prestation}</Text>
-            <Text style={styles.tableCol2}>1</Text>
-            <Text style={styles.tableCol3}>{(intervention.montant || 0).toFixed(2)}</Text>
-          </View>
+          {lignes.map((ligne, idx) => (
+            <View style={styles.tableRow} key={idx}>
+              <Text style={styles.tableCol1}>{ligne.designation}</Text>
+              <Text style={styles.tableCol2}>{ligne.quantite}</Text>
+              <Text style={styles.tableCol3}>{ligne.prix_unitaire.toFixed(2)}</Text>
+              <Text style={styles.tableCol4}>{ligne.montant.toFixed(2)}</Text>
+            </View>
+          ))}
         </View>
 
         <View style={{ marginTop: 15 }}>
-          <Text style={{ fontSize: 9, color: '#718096' }}>Date d&apos;intervention: {new Date(intervention.date_intervention).toLocaleDateString('fr-FR')}</Text>
-          {intervention.heure_debut && <Text style={{ fontSize: 9, color: '#718096' }}>Heure début: {intervention.heure_debut}</Text>}
-          {intervention.heure_fin && <Text style={{ fontSize: 9, color: '#718096' }}>Heure fin: {intervention.heure_fin}</Text>}
-          <Text style={{ fontSize: 9, color: '#718096', marginTop: 5 }}>Date d&apos;émission: {date}</Text>
+          <Text style={{ fontSize: 9, color: '#718096' }}>Date d&apos;émission: {date}</Text>
         </View>
 
         <View style={styles.signature}>

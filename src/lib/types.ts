@@ -28,6 +28,13 @@ export interface Intervention {
   client?: Client;
 }
 
+export interface LigneDocument {
+  designation: string;
+  quantite: number;
+  prix_unitaire: number;
+  montant: number;
+}
+
 export interface Document {
   id: string;
   client_id: string;
@@ -38,7 +45,7 @@ export interface Document {
   montant_ht: number | null;
   montant_ttc: number | null;
   statut: 'brouillon' | 'envoye' | 'paye' | 'annule';
-  contenu: any;
+  contenu: { lignes: LigneDocument[] } | null;
   pdf_url: string | null;
   created_at: string;
   updated_at: string;
