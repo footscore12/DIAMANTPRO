@@ -7,7 +7,7 @@ import { useDarkMode } from '@/lib/darkmode';
 import { useState } from 'react';
 import {
   LayoutDashboard, Users, Calendar, FileText, LogOut, Building2,
-  Sparkles, Menu, X, Moon, Sun
+  Sparkles, Menu, X, Moon, Sun, Settings
 } from 'lucide-react';
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
   { href: '/dashboard/services', label: 'Services', icon: Sparkles },
   { href: '/dashboard/planner', label: 'Planning', icon: Calendar },
   { href: '/dashboard/documents', label: 'Documents', icon: FileText },
+  { href: '/dashboard/configuration', label: 'Configuration', icon: Settings },
 ];
 
 export default function Sidebar() {

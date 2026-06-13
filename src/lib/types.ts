@@ -60,6 +60,20 @@ export type NewIntervention = Omit<Intervention, 'id' | 'created_at' | 'updated_
 export type NewDocument = Omit<Document, 'id' | 'created_at' | 'updated_at'>;
 export type NewService = Omit<Service, 'id' | 'created_at' | 'updated_at'>;
 
+export interface CompanySettings {
+  id: string;
+  telephone: string;
+  email: string;
+  ice: string;
+  adresse: string | null;
+}
+
+export const DEFAULT_COMPANY = {
+  telephone: '+212608342434',
+  email: 'diamantproservices@gmail.com',
+  ice: '003387626000054',
+};
+
 export const DOMAINES = ['nettoyage', '3d'] as const;
 
 export const STATUT_INTERVENTION = [

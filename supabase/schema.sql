@@ -62,6 +62,21 @@ CREATE TABLE IF NOT EXISTS documents (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- 5. COMPANY SETTINGS
+CREATE TABLE IF NOT EXISTS company_settings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  telephone VARCHAR(50) NOT NULL DEFAULT '+212608342434',
+  email VARCHAR(255) NOT NULL DEFAULT 'diamantproservices@gmail.com',
+  ice VARCHAR(255) NOT NULL DEFAULT '003387626000054',
+  adresse TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Insert default row
+INSERT INTO company_settings (telephone, email, ice)
+VALUES ('+212608342434', 'diamantproservices@gmail.com', '003387626000054');
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_interventions_client_id ON interventions(client_id);
 CREATE INDEX IF NOT EXISTS idx_interventions_date ON interventions(date_intervention);

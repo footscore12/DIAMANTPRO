@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { Building2, Eye, EyeOff } from 'lucide-react';
+import { CompanySettings, DEFAULT_COMPANY } from '@/lib/types';
+import { Building2, Eye, EyeOff, Phone, Mail, Fingerprint } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -11,7 +12,16 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [company, setCompany] = useState<CompanySettings | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    supabase.from('company_settings').select('*').limit(1).single().then(({ data }) => {
+      if (data) setCompany(data);
+    });
+  }, []);
+
+  const info = company || DEFAULT_COMPANY;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,6 +106,14 @@ export default function LoginPage() {
               {loading ? 'Connexion...' : 'Se connecter'}
             </button>
           </form>
+
+          <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+              <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> {info.telephone}</span>
+              <span className="flex items-center gap-1"><Mail className="w-3 h-3" /> {info.email}</span>
+              <span className="flex items-center gap-1"><Fingerprint className="w-3 h-3" /> ICE: {info.ice}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
