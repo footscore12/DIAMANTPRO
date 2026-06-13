@@ -39,7 +39,7 @@ export interface Document {
   id: string;
   client_id: string;
   intervention_id: string | null;
-  type: 'devis' | 'facture' | 'bon_livraison';
+  type: 'devis' | 'facture' | 'bon_livraison' | 'bon_avoir';
   numero: string;
   date_emission: string;
   montant_ht: number | null;
@@ -93,4 +93,5 @@ export const TYPE_DOCUMENT = [
   'devis',
   'facture',
   'bon_livraison',
+  'bon_avoir',
 ] as const;

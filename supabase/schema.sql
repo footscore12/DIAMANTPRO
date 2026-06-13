@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS documents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
   intervention_id UUID REFERENCES interventions(id) ON DELETE SET NULL,
-  type VARCHAR(50) NOT NULL CHECK (type IN ('devis', 'facture', 'bon_livraison')),
+  type VARCHAR(50) NOT NULL CHECK (type IN ('devis', 'facture', 'bon_livraison', 'bon_avoir')),
   numero VARCHAR(255) NOT NULL UNIQUE,
   date_emission DATE NOT NULL DEFAULT CURRENT_DATE,
   montant_ht NUMERIC(10,2),
@@ -172,3 +172,7 @@ SELECT id, '2025-06-28', '14:00', '17:00', 'Dératisation', 'planifiee', 1200.00
 
 INSERT INTO interventions (client_id, date_intervention, heure_debut, heure_fin, type_prestation, statut, montant)
 SELECT id, '2025-07-01', '09:00', '12:00', 'Nettoyage villa', 'planifiee', 1500.00 FROM clients WHERE nom = 'EXELENCIA';
+
+-- MIGRATION: Ajouter le type 'bon_avoir' aux documents existants
+ALTER TABLE documents DROP CONSTRAINT IF EXISTS documents_type_check;
+ALTER TABLE documents ADD CONSTRAINT documents_type_check CHECK (type IN ('devis', 'facture', 'bon_livraison', 'bon_avoir'));
