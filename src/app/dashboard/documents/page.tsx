@@ -100,10 +100,10 @@ export default function DocumentsPage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">Documents</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Documents</h1>
         <div className="flex items-center gap-2">
           <button onClick={() => openModal('devis')}
-            className="flex items-center gap-2 bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition">
+            className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition">
             <FileText className="w-4 h-4" /> Devis
           </button>
           <button onClick={() => openModal('facture')}
@@ -111,7 +111,7 @@ export default function DocumentsPage() {
             <Plus className="w-4 h-4" /> Facture
           </button>
           <button onClick={() => openModal('bon_livraison')}
-            className="flex items-center gap-2 bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition">
+            className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition">
             <Truck className="w-4 h-4" /> BL
           </button>
         </div>
@@ -120,21 +120,21 @@ export default function DocumentsPage() {
       {documents.length === 0 ? (
         <div className="text-center py-16">
           <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500">Aucun document généré</p>
+          <p className="text-slate-500 dark:text-slate-400">Aucun document généré</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase">Type</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase">Numéro</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase">Client</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase">Date</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-500 uppercase">Montant</th>
-                  <th className="text-center px-4 py-3 text-xs font-medium text-slate-500 uppercase">Statut</th>
-                  <th className="text-center px-4 py-3 text-xs font-medium text-slate-500 uppercase">Actions</th>
+                <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Type</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Numéro</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Client</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Date</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Montant</th>
+                  <th className="text-center px-4 py-3 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Statut</th>
+                  <th className="text-center px-4 py-3 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -147,16 +147,16 @@ export default function DocumentsPage() {
                   const docForPdf = { client: clientDoc!, intervention: interventions.find(i => i.id === doc.intervention_id) || interventions[0] };
 
                   return (
-                    <tr key={doc.id} className="border-b border-slate-100 hover:bg-slate-50">
+                    <tr key={doc.id} className="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-800/50">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <Icon className="w-4 h-4 text-slate-400" />
-                          <span className="text-sm text-slate-900">{labels[doc.type]}</span>
+                          <Icon className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                          <span className="text-sm text-slate-900 dark:text-white">{labels[doc.type]}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm font-medium text-slate-900">{doc.numero}</td>
-                      <td className="px-4 py-3 text-sm text-slate-600">{clientDoc?.nom || '-'}</td>
-                      <td className="px-4 py-3 text-sm text-slate-600">{new Date(doc.date_emission).toLocaleDateString('fr-FR')}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{doc.numero}</td>
+                      <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{clientDoc?.nom || '-'}</td>
+                      <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{new Date(doc.date_emission).toLocaleDateString('fr-FR')}</td>
                       <td className="px-4 py-3 text-sm text-right font-medium">{formatCurrency(doc.montant_ttc || 0)}</td>
                       <td className="px-4 py-3 text-center">
                         <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${getStatusColor(doc.statut)}`}>
@@ -194,7 +194,7 @@ export default function DocumentsPage() {
                             fileName={`${doc.numero}.pdf`}
                           >
                             {({ loading: _loading }) => (
-                              <button className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition" title="Télécharger PDF">
+                              <button className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded transition" title="Télécharger PDF">
                                 <Download className="w-4 h-4" />
                               </button>
                             )}
@@ -212,21 +212,21 @@ export default function DocumentsPage() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
                 Nouveau{docType === 'devis' ? ' Devis' : docType === 'facture' ? 'e Facture' : ' Bon de Livraison'}
               </h2>
-              <button onClick={() => setShowModal(false)} className="p-1 hover:bg-slate-100 rounded">
-                <X className="w-5 h-5 text-slate-400" />
+              <button onClick={() => setShowModal(false)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded">
+                <X className="w-5 h-5 text-slate-400 dark:text-slate-500" />
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Type</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Type</label>
                 <select value={docType} onChange={(e) => setDocType(e.target.value as any)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                   <option value="devis">Devis</option>
                   <option value="facture">Facture</option>
                   <option value="bon_livraison">Bon de Livraison</option>
@@ -234,9 +234,9 @@ export default function DocumentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Client</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Client</label>
                 <select value={selectedClient} onChange={(e) => handleClientSelect(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                   <option value="">Sélectionner un client</option>
                   {clients.map((c) => (
                     <option key={c.id} value={c.id}>{c.nom}</option>
@@ -247,13 +247,13 @@ export default function DocumentsPage() {
               {selectedClient && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Intervention liée</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Intervention liée</label>
                     <select value={selectedIntervention} onChange={(e) => {
                       setSelectedIntervention(e.target.value);
                       const int = interventions.find(i => i.id === e.target.value);
                       if (int) { setMontant(int.montant?.toString() || ''); setPrestation(int.type_prestation); }
                     }}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                       <option value="">Sans intervention</option>
                       {interventions.filter(i => i.client_id === selectedClient).map((i) => (
                         <option key={i.id} value={i.id}>
@@ -264,7 +264,7 @@ export default function DocumentsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Prestation *</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Prestation *</label>
                     <select value={services.find(s => s.nom === prestation)?.id || ''}
                       onChange={(e) => {
                         if (e.target.value === '__custom__') return;
@@ -274,7 +274,7 @@ export default function DocumentsPage() {
                           if (!montant && svc.prix_defaut && svc.prix_defaut > 0) setMontant(svc.prix_defaut.toString());
                         }
                       }}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                       <option value="">-- Choisir un service --</option>
                       <option value="__custom__">✏️ Prestation personnalisée...</option>
                       {services.filter(s => s.domaine === 'nettoyage').length > 0 && (
@@ -293,21 +293,21 @@ export default function DocumentsPage() {
                       )}
                     </select>
                     <input type="text" value={prestation} onChange={(e) => setPrestation(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none mt-2"
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none mt-2"
                       placeholder="Ou tapez directement la prestation" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Montant HT (MAD)</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Montant HT (MAD)</label>
                     <input type="number" step="0.01" value={montant} onChange={(e) => setMontant(e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
                   </div>
                 </>
               )}
 
               <div className="flex justify-end gap-2 pt-2">
                 <button onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition">Annuler</button>
+                  className="px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition">Annuler</button>
                 <button onClick={saveDocument}
                   disabled={!selectedClient || !montant}
                   className="px-4 py-2 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition disabled:opacity-50">

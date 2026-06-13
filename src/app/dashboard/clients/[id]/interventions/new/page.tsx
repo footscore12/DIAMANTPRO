@@ -73,26 +73,26 @@ export default function NewInterventionPage() {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="flex items-center gap-4 mb-6">
-        <Link href={`/dashboard/clients/${id}`} className="p-2 hover:bg-slate-100 rounded-lg transition">
-          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        <Link href={`/dashboard/clients/${id}`} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition">
+          <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Nouvelle intervention</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Nouvelle intervention</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Date *</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Date *</label>
             <input type="date" value={form.date_intervention}
               onChange={(e) => setForm({ ...form, date_intervention: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1">Type de prestation *</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Type de prestation *</label>
             {!customMode ? (
               <div className="space-y-2">
                 <select value={selectedServiceId} onChange={(e) => handleServiceSelect(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
                   <option value="">-- Choisir un service --</option>
                   {nettoyageServices.length > 0 && (
                     <optgroup label="🧹 Nettoyage">
@@ -114,7 +114,7 @@ export default function NewInterventionPage() {
                   + Prestation personnalisée (hors liste)
                 </button>
                 {selectedServiceId && services.find(s => s.id === selectedServiceId) && (
-                  <p className="text-xs text-slate-400 flex items-center gap-1">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1">
                     {services.find(s => s.id === selectedServiceId)?.domaine === 'nettoyage' ? <Sparkles className="w-3 h-3" /> : <Bug className="w-3 h-3" />}
                     {services.find(s => s.id === selectedServiceId)?.description}
                   </p>
@@ -124,38 +124,38 @@ export default function NewInterventionPage() {
               <div className="space-y-2">
                 <input type="text" value={form.type_prestation}
                   onChange={(e) => setForm({ ...form, type_prestation: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required
                   placeholder="Tapez la prestation..." />
                 <button type="button" onClick={() => { setCustomMode(false); setSelectedServiceId(''); }}
-                  className="text-xs text-slate-500 hover:text-slate-700">
+                  className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:text-slate-300">
                   ← Retour à la liste des services
                 </button>
               </div>
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Montant (MAD)</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Montant (MAD)</label>
             <input type="number" step="0.01" value={form.montant}
               onChange={(e) => setForm({ ...form, montant: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Heure début</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Heure début</label>
             <input type="time" value={form.heure_debut}
               onChange={(e) => setForm({ ...form, heure_debut: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Heure fin</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Heure fin</label>
             <input type="time" value={form.heure_fin}
               onChange={(e) => setForm({ ...form, heure_fin: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Notes</label>
             <textarea value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={3} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={3} />
           </div>
         </div>
 

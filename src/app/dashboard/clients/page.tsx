@@ -54,7 +54,7 @@ export default function ClientsPage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">Clients</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Clients</h1>
         <button onClick={() => router.push('/dashboard/clients/new')}
           className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
           <Plus className="w-4 h-4" /> Nouveau client
@@ -62,31 +62,31 @@ export default function ClientsPage() {
       </div>
 
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
         <input type="text" placeholder="Rechercher par nom, ville, téléphone ou ICE..."
           value={search} onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" />
+          className="w-full pl-10 pr-4 py-2.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" />
       </div>
 
       {filtered.length === 0 ? (
         <div className="text-center py-16">
           <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500">Aucun client trouvé</p>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500">Aucun client trouvé</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Client</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Ville</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Téléphone</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">ICE</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Dernière intervention</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Horaire</th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Prochaine visite</th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Actions</th>
+                <tr className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase">Client</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase">Ville</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase">Téléphone</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase">ICE</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase">Dernière intervention</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase">Horaire</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase">Prochaine visite</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -94,33 +94,33 @@ export default function ClientsPage() {
                   const lastInt = getLastIntervention(client.id);
                   return (
                     <tr key={client.id}
-                      className="border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition"
+                      className="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition"
                       onClick={() => router.push(`/dashboard/clients/${client.id}`)}>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <Building2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                          <span className="text-sm font-medium text-slate-900">{client.nom}</span>
+                          <span className="text-sm font-medium text-slate-900 dark:text-white">{client.nom}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-slate-600">
-                        {client.ville && <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-slate-400" /> {client.ville}</span>}
+                      <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
+                        {client.ville && <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" /> {client.ville}</span>}
                       </td>
-                      <td className="px-4 py-3 text-sm text-slate-600">
-                        {client.telephone && <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5 text-slate-400" /> {client.telephone}</span>}
+                      <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
+                        {client.telephone && <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" /> {client.telephone}</span>}
                       </td>
-                      <td className="px-4 py-3 text-sm text-slate-500 font-mono">{client.ice || '-'}</td>
-                      <td className="px-4 py-3 text-sm text-slate-600">
+                      <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 font-mono">{client.ice || '-'}</td>
+                      <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
                         {lastInt ? (
                           <span className="flex items-center gap-1">
-                            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                            <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                             {formatDateShort(lastInt.date_intervention)}
                           </span>
                         ) : '-'}
                       </td>
-                      <td className="px-4 py-3 text-sm text-slate-600">
+                      <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
                         {lastInt?.heure_debut ? (
                           <span className="flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-slate-400" />
+                            <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                             {lastInt.heure_debut.slice(0, 5)}{lastInt.heure_fin ? `-${lastInt.heure_fin.slice(0, 5)}` : ''}
                           </span>
                         ) : '-'}
@@ -128,12 +128,12 @@ export default function ClientsPage() {
                       <td className="px-4 py-3 text-center">
                         {client.prochaine_visite ? (
                           <div className="flex items-center justify-center gap-1">
-                            <span className="text-sm text-slate-600">{formatDateShort(client.prochaine_visite)}</span>
+                            <span className="text-sm text-slate-600 dark:text-slate-300">{formatDateShort(client.prochaine_visite)}</span>
                             {isUpcoming(client.prochaine_visite) && (
                               <span className={`flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full font-medium ${
                                 daysUntil(client.prochaine_visite) <= 1
-                                  ? 'bg-red-100 text-red-700'
-                                  : 'bg-amber-100 text-amber-700'
+                                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                                  : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
                               }`}>
                                 <AlertTriangle className="w-3 h-3" />
                                 {daysUntil(client.prochaine_visite) === 0 ? 'Aujourd\'hui'
@@ -143,12 +143,12 @@ export default function ClientsPage() {
                             )}
                           </div>
                         ) : (
-                          <span className="text-sm text-slate-400">-</span>
+                          <span className="text-sm text-slate-400 dark:text-slate-500">-</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-center">
                         <button onClick={(e) => { e.stopPropagation(); deleteClient(client.id, client.nom); }}
-                          className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition">
+                          className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </td>
@@ -158,7 +158,7 @@ export default function ClientsPage() {
               </tbody>
             </table>
           </div>
-          <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500">
+          <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">
             {filtered.length} client{filtered.length > 1 ? 's' : ''} trouvé{filtered.length > 1 ? 's' : ''}
           </div>
         </div>

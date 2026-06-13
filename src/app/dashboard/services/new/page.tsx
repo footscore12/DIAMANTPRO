@@ -36,30 +36,30 @@ export default function NewServicePage() {
   return (
     <div className="p-6 max-w-xl mx-auto">
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/dashboard/services" className="p-2 hover:bg-slate-100 rounded-lg transition">
-          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        <Link href="/dashboard/services" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition">
+          <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Nouveau service</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Nouveau service</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Nom *</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nom *</label>
           <input type="text" value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Domaine</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Domaine</label>
           <div className="flex gap-3">
             {DOMAINES.map(d => (
               <button key={d} type="button" onClick={() => setForm({ ...form, domaine: d })}
                 className={`flex-1 px-4 py-3 rounded-lg border-2 text-sm font-medium transition ${
                   form.domaine === d
                     ? d === 'nettoyage'
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-amber-500 bg-amber-50 text-amber-700'
-                    : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                      : 'border-amber-500 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
+                    : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600'
                 }`}>
                 {d === 'nettoyage' ? '🧹 Nettoyage' : '🐭 3D (Dératisation/Désinfection/Désinsectisation)'}
               </button>
@@ -68,15 +68,15 @@ export default function NewServicePage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Description</label>
           <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={3} />
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={3} />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Prix par défaut (MAD)</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Prix par défaut (MAD)</label>
           <input type="number" step="0.01" value={form.prix_defaut} onChange={(e) => setForm({ ...form, prix_defaut: e.target.value })}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
         </div>
 
         <div className="flex justify-end pt-2">

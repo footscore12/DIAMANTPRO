@@ -48,11 +48,11 @@ export default function PlannerContent({ interventions, clients }: PlannerConten
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">Planning</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Planning</h1>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+        <div className="xl:col-span-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4">
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -81,29 +81,29 @@ export default function PlannerContent({ interventions, clients }: PlannerConten
 
         <div className="space-y-6">
           {selectedIntervention && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-              <h3 className="font-semibold text-slate-900 mb-3">D&eacute;tails de l&apos;intervention</h3>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-5">
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-3">D&eacute;tails de l&apos;intervention</h3>
               <div className="space-y-2 text-sm">
-                <p><span className="text-slate-500">Client:</span> <span className="font-medium">{selectedIntervention.client?.nom}</span></p>
-                <p><span className="text-slate-500">Date:</span> {new Date(selectedIntervention.date_intervention).toLocaleDateString('fr-FR')}</p>
-                <p><span className="text-slate-500">Prestation:</span> {selectedIntervention.type_prestation}</p>
-                <p><span className="text-slate-500">Statut:</span>{' '}
+                <p><span className="text-slate-500 dark:text-slate-400">Client:</span> <span className="font-medium">{selectedIntervention.client?.nom}</span></p>
+                <p><span className="text-slate-500 dark:text-slate-400">Date:</span> {new Date(selectedIntervention.date_intervention).toLocaleDateString('fr-FR')}</p>
+                <p><span className="text-slate-500 dark:text-slate-400">Prestation:</span> {selectedIntervention.type_prestation}</p>
+                <p><span className="text-slate-500 dark:text-slate-400">Statut:</span>{' '}
                   <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${getStatusColor(selectedIntervention.statut)}`}>
                     {getStatusLabel(selectedIntervention.statut)}
                   </span>
                 </p>
                 {selectedIntervention.montant && (
-                  <p><span className="text-slate-500">Montant:</span> {formatCurrency(selectedIntervention.montant)}</p>
+                  <p><span className="text-slate-500 dark:text-slate-400">Montant:</span> {formatCurrency(selectedIntervention.montant)}</p>
                 )}
                 {selectedIntervention.notes && (
-                  <p><span className="text-slate-500">Notes:</span> {selectedIntervention.notes}</p>
+                  <p><span className="text-slate-500 dark:text-slate-400">Notes:</span> {selectedIntervention.notes}</p>
                 )}
               </div>
             </div>
           )}
 
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-            <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-5">
+            <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
               <MapPin className="w-5 h-5 text-emerald-600" />
               Carte clients
             </h3>
@@ -125,8 +125,8 @@ export default function PlannerContent({ interventions, clients }: PlannerConten
                     <Popup>
                       <div className="text-sm">
                         <p className="font-semibold">{client.nom}</p>
-                        <p className="text-slate-500">{client.adresse}, {client.ville}</p>
-                        {client.telephone && <p className="text-slate-500">📞 {client.telephone}</p>}
+                        <p className="text-slate-500 dark:text-slate-400">{client.adresse}, {client.ville}</p>
+                        {client.telephone && <p className="text-slate-500 dark:text-slate-400">📞 {client.telephone}</p>}
                       </div>
                     </Popup>
                   </Marker>

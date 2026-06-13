@@ -116,13 +116,13 @@ export default function DashboardPage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">Tableau de bord</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Tableau de bord</h1>
         <div className="flex items-center gap-3">
           <button onClick={() => { Notification.requestPermission(); }}
-            className="text-xs text-slate-400 hover:text-slate-600 transition" title="Activer les notifications">
+            className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition" title="Activer les notifications">
             <Bell className="w-4 h-4" />
           </button>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             {new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>
@@ -130,13 +130,13 @@ export default function DashboardPage() {
 
       {/* Notification banner */}
       {showNotif && upcomingVisits.filter(v => v.days <= 3 && !notifDismissed.includes(v.id)).length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 flex items-start gap-3">
           <BellRing className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
           <div className="flex-1">
-            <p className="font-semibold text-red-800 text-sm">🔔 Visites imminentes !</p>
+            <p className="font-semibold text-red-800 dark:text-red-300 text-sm">🔔 Visites imminentes !</p>
             <div className="flex flex-wrap gap-2 mt-2">
               {upcomingVisits.filter(v => v.days <= 3 && !notifDismissed.includes(v.id)).map(v => (
-                <span key={v.id} className="bg-white border border-red-200 px-2.5 py-1 rounded-lg text-xs text-red-700 flex items-center gap-1">
+                <span key={v.id} className="bg-white dark:bg-red-900/30 border border-red-200 dark:border-red-700 px-2.5 py-1 rounded-lg text-xs text-red-700 dark:text-red-300 flex items-center gap-1">
                   <Building2 className="w-3 h-3" /> {v.nom} - {v.days === 0 ? "Aujourd'hui" : v.days === 1 ? 'Demain' : `J-${v.days}`}
                 </span>
               ))}
@@ -150,11 +150,11 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card) => (
-          <div key={card.label} className="bg-white rounded-xl shadow-sm p-5 border border-slate-200">
+          <div key={card.label} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-5 border border-slate-200 dark:border-slate-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500">{card.label}</p>
-                <p className="text-2xl font-bold text-slate-900 mt-1">{card.value}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{card.label}</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{card.value}</p>
               </div>
               <div className={`${card.color} p-3 rounded-lg`}>
                 <card.icon className="w-5 h-5 text-white" />
@@ -165,8 +165,8 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-5 border border-slate-200">
-          <h2 className="font-semibold text-slate-900 mb-4">Interventions par mois</h2>
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm p-5 border border-slate-200 dark:border-slate-700">
+          <h2 className="font-semibold text-slate-900 dark:text-white mb-4">Interventions par mois</h2>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
@@ -182,27 +182,27 @@ export default function DashboardPage() {
         </div>
 
         <div className="space-y-4">
-          <div className="bg-white rounded-xl shadow-sm p-5 border border-slate-200">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-5 border border-slate-200 dark:border-slate-700">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <AlertTriangle className={`w-5 h-5 ${upcomingVisits.length > 0 ? 'text-amber-500' : 'text-slate-400'}`} />
-                <h2 className="font-semibold text-slate-900">Prochaines visites</h2>
+                <h2 className="font-semibold text-slate-900 dark:text-white">Prochaines visites</h2>
               </div>
               {upcomingVisits.length > 0 && (
-                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+                <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full font-medium">
                   {upcomingVisits.length} à venir
                 </span>
               )}
             </div>
             {upcomingVisits.length === 0 ? (
-              <p className="text-sm text-slate-500 text-center py-6">Aucune visite prévue</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 text-center py-6">Aucune visite prévue</p>
             ) : (
               <div className="space-y-2 max-h-80 overflow-y-auto">
                 {upcomingVisits.map((client) => (
                   <div key={client.id}
                     onClick={() => router.push(`/dashboard/clients/${client.id}`)}
                     className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer transition ${
-                      client.days <= 1 ? 'bg-red-50 border border-red-100' : client.days <= 3 ? 'bg-amber-50 border border-amber-100' : 'bg-slate-50'
+                      client.days <= 1 ? 'bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800' : client.days <= 3 ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800' : 'bg-slate-50 dark:bg-slate-800/50'
                     }`}>
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                       client.days <= 1 ? 'bg-red-100' : client.days <= 3 ? 'bg-amber-100' : 'bg-emerald-100'
@@ -212,8 +212,8 @@ export default function DashboardPage() {
                       }`} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium text-sm text-slate-900 truncate">{client.nom}</p>
-                      <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                      <p className="font-medium text-sm text-slate-900 dark:text-white truncate">{client.nom}</p>
+                      <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                         {client.ville && <span className="flex items-center gap-0.5"><MapPin className="w-3 h-3" /> {client.ville}</span>}
                         {client.telephone && <span className="flex items-center gap-0.5"><Phone className="w-3 h-3" /> {client.telephone}</span>}
                       </div>
@@ -224,7 +224,7 @@ export default function DashboardPage() {
                         {' · '}{formatDateShort(client.prochaine_visite!)}
                       </p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-slate-300 mt-1 shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 mt-1 shrink-0" />
                   </div>
                 ))}
               </div>

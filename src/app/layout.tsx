@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { DarkModeProvider } from '@/lib/darkmode';
 
 export const metadata: Metadata = {
   title: "DIAMANT PRO SERVICES - Gestion",
@@ -12,9 +13,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <body className="antialiased">
-        {children}
+        <DarkModeProvider>
+          {children}
+        </DarkModeProvider>
       </body>
     </html>
   );

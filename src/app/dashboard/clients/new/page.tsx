@@ -42,58 +42,58 @@ export default function NewClientPage() {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/dashboard/clients" className="p-2 hover:bg-slate-100 rounded-lg transition">
-          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        <Link href="/dashboard/clients" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition">
+          <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Nouveau client</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Nouveau client</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1">Nom *</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nom *</label>
             <input type="text" value={form.nom} onChange={(e) => updateField('nom', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Téléphone</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Téléphone</label>
             <input type="tel" value={form.telephone} onChange={(e) => updateField('telephone', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
             <input type="email" value={form.email} onChange={(e) => updateField('email', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">ICE</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">ICE</label>
             <input type="text" value={form.ice} onChange={(e) => updateField('ice', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Ville</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Ville</label>
             <input type="text" value={form.ville} onChange={(e) => updateField('ville', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Code postal</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Code postal</label>
             <input type="text" value={form.code_postal} onChange={(e) => updateField('code_postal', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1">Adresse</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Adresse</label>
             <textarea value={form.adresse} onChange={(e) => updateField('adresse', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={2} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={2} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Prochaine visite</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Prochaine visite</label>
             <input type="date" value={form.prochaine_visite} onChange={(e) => updateField('prochaine_visite', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Notes</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Notes</label>
             <textarea value={form.notes} onChange={(e) => updateField('notes', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={2} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none" rows={2} />
           </div>
         </div>
 
