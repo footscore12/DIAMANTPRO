@@ -296,6 +296,38 @@ export default function DocumentsPage() {
                   </div>
 
                   <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Ajouter depuis un service</label>
+                    <select onChange={(e) => {
+                      if (!e.target.value) return;
+                      const svc = services.find(s => s.id === e.target.value);
+                      if (svc) {
+                        setLignes(prev => [...prev, {
+                          designation: svc.nom,
+                          quantite: 1,
+                          prix_unitaire: svc.prix_defaut || 0,
+                          montant: svc.prix_defaut || 0,
+                        }]);
+                      }
+                      e.target.value = '';
+                    }}
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none mb-3">
+                      <option value="">-- Choisir un service --</option>
+                      {services.filter(s => s.domaine === 'nettoyage').length > 0 && (
+                        <optgroup label="🧹 Nettoyage">
+                          {services.filter(s => s.domaine === 'nettoyage').map(s => (
+                            <option key={s.id} value={s.id}>{s.nom}{s.prix_defaut && s.prix_defaut > 0 ? ` (${s.prix_defaut} MAD)` : ''}</option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {services.filter(s => s.domaine === '3d').length > 0 && (
+                        <optgroup label="🐭 3D (Dératisation / Désinfection / Désinsectisation)">
+                          {services.filter(s => s.domaine === '3d').map(s => (
+                            <option key={s.id} value={s.id}>{s.nom}{s.prix_defaut && s.prix_defaut > 0 ? ` (${s.prix_defaut} MAD)` : ''}</option>
+                          ))}
+                        </optgroup>
+                      )}
+                    </select>
+
                     <div className="flex items-center justify-between mb-2">
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Lignes *</label>
                       <button type="button" onClick={ajouterLigne}
