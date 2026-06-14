@@ -108,7 +108,7 @@ export default function DocumentsPage() {
       type: docType,
       date_emission: now,
       montant_ht: totalHT,
-      montant_ttc: docType === 'bon_avoir' ? totalHT : totalTTC,
+      montant_ttc: docType === 'facture' ? totalTTC : totalHT,
       contenu: { lignes },
       statut: 'brouillon',
     };
@@ -410,18 +410,18 @@ export default function DocumentsPage() {
                     <div className="flex justify-end text-sm space-y-1">
                       <div className="w-48 space-y-1">
                         <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                          <span>Total {docType === 'bon_avoir' ? '' : 'HT'}</span>
+                          <span>Total {docType === 'facture' ? 'HT' : ''}</span>
                           <span className="font-medium text-slate-900 dark:text-white">{totalHT.toFixed(2)} MAD</span>
                         </div>
-                        {docType !== 'bon_avoir' && (
+                        {docType === 'facture' && (
                           <div className="flex justify-between text-slate-600 dark:text-slate-400">
                             <span>TVA (20%)</span>
                             <span className="font-medium text-slate-900 dark:text-white">{(totalHT * 0.20).toFixed(2)} MAD</span>
                           </div>
                         )}
                         <div className="flex justify-between text-base font-bold text-emerald-600 dark:text-emerald-400 border-t border-slate-200 dark:border-slate-700 pt-1">
-                          <span>Total TTC</span>
-                          <span>{(docType === 'bon_avoir' ? totalHT : totalTTC).toFixed(2)} MAD</span>
+                          <span>{docType === 'facture' ? 'Total TTC' : 'Total'}</span>
+                          <span>{(docType === 'facture' ? totalTTC : totalHT).toFixed(2)} MAD</span>
                         </div>
                       </div>
                     </div>
