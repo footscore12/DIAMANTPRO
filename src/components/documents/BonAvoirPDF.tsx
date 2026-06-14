@@ -38,6 +38,11 @@ export default function BonAvoirPDF({ client, lignes, numero, date }: BonAvoirPD
           <View>
             <Text style={styles.companyName}>DIAMANT PRO SERVICES</Text>
             <Text style={styles.companyInfo}>Nettoyage & Hygiène Professionnelle</Text>
+            <Text style={styles.companyInfo}>ICE: 003387626000054 / RC 57207</Text>
+            <Text style={styles.companyInfo}>IF: 60123351 &ndash; TP: 48108614 &ndash; CNSS: 5263199</Text>
+            <Text style={styles.companyInfo}>Tél: 0608 24 24 34 &ndash; 0661 23 46 88</Text>
+            <Text style={styles.companyInfo}>Email: diamantproservices@gmail.com</Text>
+            <Text style={styles.companyInfo}>Adresse: Rue 644 N°22 Khiam 2 Agadir</Text>
           </View>
           <View>
             <Text style={styles.title}>BON D{'\u0027'}AVOIR</Text>
@@ -82,7 +87,7 @@ export default function BonAvoirPDF({ client, lignes, numero, date }: BonAvoirPD
         </View>
 
         <Text style={styles.footer}>
-          DIAMANT PRO SERVICES - Ce bon d{'\u0027'}avoir est valable 90 jours
+          DIAMANT PRO SERVICES - RC 57207 - IF 60123351 - TP 48108614 - CNSS 5263199
         </Text>
       </Page>
     </Document>

@@ -33,6 +33,7 @@ interface DeliveryNotePDFProps {
 }
 
 export default function DeliveryNotePDF({ client, lignes, numero, date }: DeliveryNotePDFProps) {
+  const total = lignes.reduce((s, l) => s + l.montant, 0);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -40,8 +41,11 @@ export default function DeliveryNotePDF({ client, lignes, numero, date }: Delive
           <View>
             <Text style={styles.companyName}>DIAMANT PRO SERVICES</Text>
             <Text style={styles.companyInfo}>Nettoyage & Hygiène Professionnelle</Text>
-            <Text style={styles.companyInfo}>ICE: XX-XXXXXXX-XX</Text>
-            <Text style={styles.companyInfo}>Tél: +212 6 XX XX XX XX</Text>
+            <Text style={styles.companyInfo}>ICE: 003387626000054 / RC 57207</Text>
+            <Text style={styles.companyInfo}>IF: 60123351 &ndash; TP: 48108614 &ndash; CNSS: 5263199</Text>
+            <Text style={styles.companyInfo}>Tél: 0608 24 24 34 &ndash; 0661 23 46 88</Text>
+            <Text style={styles.companyInfo}>Email: diamantproservices@gmail.com</Text>
+            <Text style={styles.companyInfo}>Adresse: Rue 644 N°22 Khiam 2 Agadir</Text>
           </View>
           <View>
             <Text style={styles.title}>BON DE LIVRAISON</Text>
@@ -76,6 +80,13 @@ export default function DeliveryNotePDF({ client, lignes, numero, date }: Delive
         </View>
 
         <View style={{ marginTop: 15 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10, fontSize: 12, fontWeight: 'bold' }}>
+            <Text style={{ width: 100 }}>Total:</Text>
+            <Text style={{ width: 100, textAlign: 'right' }}>{total.toFixed(2)} MAD</Text>
+          </View>
+        </View>
+
+        <View style={{ marginTop: 15 }}>
           <Text style={{ fontSize: 9, color: '#718096' }}>Date d&apos;émission: {date}</Text>
         </View>
 
@@ -91,7 +102,7 @@ export default function DeliveryNotePDF({ client, lignes, numero, date }: Delive
         </View>
 
         <Text style={styles.footer}>
-          DIAMANT PRO SERVICES - RC: XXXXX - IF: XXXXX - Patente: XXXXX
+          DIAMANT PRO SERVICES - RC 57207 - IF 60123351 - TP 48108614 - CNSS 5263199
         </Text>
       </Page>
     </Document>
